@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>রেজিস্ট্রেশন - ইউনিটি বন্ধু গ্রুপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase CDN যুক্ত করা হলো -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171c3d 100%);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(16, 185, 129, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field > i:first-child {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-field input, 
+        .input-field select {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input.password-input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        .input-field select option {
+            background: #171c3d;
+            color: white;
+        }
+
+        .input-field input[type="file"] {
+            padding: 10px 15px 10px 45px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .input-field input:focus,
+        .input-field select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-footer a {
+            color: #34d399;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h1>রেজিস্ট্রেশন</h1>
+            <p>আপনার এলাকার সঠিক তথ্য দিয়ে মেম্বার হওয়ার ফর্ম পূরণ করুন</p>
+        </div>
+
+        <!-- ফর্ম সাবমিট হ্যান্ডেল করার জন্য id="registerForm" যুক্ত করা হয়েছে -->
+        <form id="registerForm">
+            <div class="input-group">
+                <label>আপনার সম্পূর্ণ নাম</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="fullName" placeholder="আপনার নাম লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>মোবাইল নম্বর (হোয়াটসঅ্যাপসহ)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="phoneNumber" placeholder="০১৭xxxxxxxx" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>জেলা</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <input type="text" id="district" placeholder="আপনার জেলার নাম লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>থানা / উপজেলা</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-map-pin"></i>
+                    <input type="text" id="upazila" placeholder="আপনার থানার নাম লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ইউনিয়ন / ওয়ার্ড / গ্রাম</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input type="text" id="addressDetails" placeholder="ইউনিয়ন, ওয়ার্ড ও গ্রামের নাম লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>আইডি কার্ডের ধরন নির্বাচন করুন</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-id-card"></i>
+                    <select id="idCardType" required>
+                        <option value="" disabled selected>আইডি কার্ড সিলেক্ট করুন</option>
+                        <option value="nid">NID কার্ড (জাতীয় পরিচয়পত্র)</option>
+                        <option value="birth">জন্ম নিবন্ধন সনদ</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>NID অথবা জন্ম নিবন্ধন নম্বর</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-id-card"></i>
+                    <input type="text" id="idCardNumber" placeholder="নম্বরটি এখানে লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>আইডি কার্ডের সরাসরি ছবি তুলুন (ক্যামেরা)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-camera"></i>
+                    <input type="file" id="idCardImage" accept="image/*" capture="environment" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>আপনার নিজের সরাসরি ছবি তুলুন (সেলফি/ক্যামেরা)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-user-camera"></i>
+                    <input type="file" id="selfieImage" accept="image/*" capture="user" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ফেসবুক আইডি বা কাজের পেজের লিংক</label>
+                <div class="input-field">
+                    <i class="fa-brands fa-facebook"></i>
+                    <input type="url" id="facebookLink" placeholder="ফেসবুক প্রোফাইল বা পেজের লিংক দিন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>পাসওয়ার্ড তৈরি করুন</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="passwordField" class="password-input" placeholder="একটি গোপন পাসওয়ার্ড দিন" required>
+                    <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+            </div>
+
+            <button type="submit" id="submitBtn" class="btn-submit">
+                <i class="fa-solid fa-user-plus"></i> রেজিস্ট্রেশন সম্পন্ন করুন
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>ইতিমধ্যেই একাউন্ট আছে? <a href="login.html">লগইন করুন</a></p>
+            <a href="index.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান</a>
+        </div>
+    </div>
+
+    <!-- জাভাস্ক্রিপ্ট এবং Supabase ডাটাবেজ ইন্টিগ্রেশন -->
+    <script>
+        // পাসওয়ার্ড শো/হাইড করার স্ক্রিপ্ট
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordField = document.querySelector('#passwordField');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // ফর্ম সাবমিট হ্যান্ডলার
+        document.getElementById('registerForm').addEventListener('submit', async function(e) {
+            // ব্রাউজারের ডিফল্ট পেজ রিলোড বা সাবমিট সম্পূর্ণরূপে বন্ধ করা হলো
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalBtnText = submitBtn.innerHTML;
+            submitBtn.innerText = 'অপেক্ষা করুন, ডেটা আপলোড হচ্ছে...';
+            submitBtn.disabled = true;
+
+            try {
+                // ১. ইনপুট ফিল্ডের ডাটাগুলো সংগ্রহ করা
+                const fullName = document.getElementById('fullName').value.trim();
+                const phoneNumber = document.getElementById('phoneNumber').value.trim();
+                const district = document.getElementById('district').value.trim();
+                const upazila = document.getElementById('upazila').value.trim();
+                const addressDetails = document.getElementById('addressDetails').value.trim();
+                const idCardType = document.getElementById('idCardType').value;
+                const idCardNumber = document.getElementById('idCardNumber').value.trim();
+                const facebookLink = document.getElementById('facebookLink').value.trim();
+                const password = passwordField.value;
+
+                const idCardFile = document.getElementById('idCardImage').files[0];
+                const selfieFile = document.getElementById('selfieImage').files[0];
+
+                // ২. ছবিগুলো Supabase Storage-এ আপলোড করার ফাংশন
+                async function uploadImage(file, folderName) {
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `${folderName}/${fileName}`;
+
+                    const { data, error } = await _supabase.storage
+                        .from('member-images')
+                        .upload(filePath, file);
+
+                    if (error) throw error;
+
+                    // পাবলিক URL বের করা
+                    const { data: { publicUrl } } = _supabase.storage
+                        .from('member-images')
+                        .getPublicUrl(filePath);
+
+                    return publicUrl;
+                }
+
+                // ছবি দুটি আপলোড করা
+                let idCardImageUrl = '';
+                let selfieImageUrl = '';
+
+                if (idCardFile) {
+                    idCardImageUrl = await uploadImage(idCardFile, 'id-cards');
+                }
+                if (selfieFile) {
+                    selfieImageUrl = await uploadImage(selfieFile, 'selfies');
+                }
+
+                // ৩. members টেবিলে ডাটা ইনসার্ট করা
+                const { error: dbError } = await _supabase
+                    .from('members')
+                    .insert([
+                        {
+                            full_name: fullName,
+                            mobile: phoneNumber,
+                            district: district,
+                            thana: upazila,
+                            union_ward: addressDetails,
+                            id_type: idCardType,
+                            id_number: idCardNumber,
+                            id_card_image: idCardImageUrl,
+                            selfie_image: selfieImageUrl,
+                            facebook_link: facebookLink,
+                            password: password
+                        }
+                    ]);
+
+                if (dbError) throw dbError;
+
+                alert('অভিনন্দন! আপনার রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে।');
+                document.getElementById('registerForm').reset(); // ফর্মের সব ইনপুট ক্লিয়ার করে দেওয়া
+                window.location.href = 'login.html';
+
+            } catch (error) {
+                console.error('Registration Error:', error);
+                alert('রেজিস্ট্রেশন করতে সমস্যা হয়েছে: সচিব বা ডাটাবেজ চেক করুন। বিস্তারিত: ' + (error.message || error));
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>

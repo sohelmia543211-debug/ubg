@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ইউনিটি বন্ধু গ্রুপ - Unity Bondhu Group</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase CDN যুক্ত করা হলো -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --accent: #f43f5e;
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171c3d 100%);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(16, 185, 129, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 15px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        /* Header Section */
+        header {
+            text-align: center;
+            padding: 30px 20px;
+            margin-bottom: 25px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .slogan {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+
+        .alert-badge {
+            display: inline-block;
+            background: rgba(244, 63, 94, 0.15);
+            color: #fb7185;
+            border: 1px solid rgba(244, 63, 94, 0.3);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(244, 63, 94, 0.2);
+            margin-bottom: 15px;
+        }
+
+        /* Live Counter Bar */
+        .live-counter {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 12px 20px;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .counter-item {
+            text-align: center;
+        }
+
+        .counter-item span {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #34d399;
+        }
+
+        .counter-item p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        /* Main Card Style */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 35px;
+            border-radius: 24px;
+            margin-bottom: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h2 {
+            font-size: 1.6rem;
+            color: #34d399;
+            margin-bottom: 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Facility Grid */
+        .facility-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .feature-box {
+            background: rgba(16, 185, 129, 0.03);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            padding: 25px;
+            border-radius: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.05);
+        }
+
+        .feature-box:hover {
+            transform: translateY(-5px);
+            border-color: rgba(16, 185, 129, 0.6);
+            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15);
+            background: rgba(16, 185, 129, 0.06);
+        }
+
+        .icon-circle {
+            width: 65px;
+            height: 65px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px auto;
+        }
+
+        .icon-circle i {
+            font-size: 1.8rem;
+            color: #34d399;
+        }
+
+        .feature-box h3 {
+            font-size: 1.15rem;
+            color: white;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .feature-box p {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+        }
+
+        /* Rules Box */
+        .rules-box {
+            margin-top: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 4px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 0 12px 12px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .rules-box p {
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .text-green { color: #34d399; }
+        .text-red { color: #fb7185; }
+
+        /* Action Card */
+        .action-card {
+            text-align: center;
+            border: 2px solid rgba(16, 185, 129, 0.4);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(255, 255, 255, 0.02));
+        }
+
+        .bottom-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            flex: 1;
+            min-width: 200px;
+            padding: 16px 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 14px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background: rgba(255, 255, 255, 0.05);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .btn-login:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: white;
+            transform: translateY(-2px);
+        }
+
+        .btn-reg {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+        }
+
+        .btn-reg:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.5);
+            background: linear-gradient(135deg, #059669, #047857);
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- Header Section -->
+        <header>
+            <h1>ইউনিটি বন্ধু গ্রুপ</h1>
+            <p class="slogan">❝ একতাই আমাদের শক্তি, বন্ধুত্বে আমাদের সুরক্ষা। ❞</p>
+            <div class="alert-badge">
+                <i class="fa-solid fa-triangle-exclamation"></i> প্রতিটি গ্রাম থেকে কঠোরভাবে মাত্র ১ জন সৎ ও কর্মঠ তরুণকে নেওয়া হবে!
+            </div>
+            
+            <!-- Live Counter Bar -->
+            <div class="live-counter">
+                <div class="counter-item">
+                    <span>৬৮,০০০</span>
+                    <p>মোট লক্ষ্য গ্রাম</p>
+                </div>
+                <div class="counter-item">
+                    <span id="activeMembersCount">লোড হচ্ছে...</span>
+                    <p>সক্রিয় মেম্বার যুক্ত</p>
+                </div>
+                <div class="counter-item">
+                    <span id="remainingSeatsCount">লোড হচ্ছে...</span>
+                    <p>খালি আসন বাকি</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Human Welfare & Vision Section -->
+        <section class="card">
+            <h2><i class="fa-solid fa-hand-holding-heart"></i> আমাদের মানবতার কাজ ও লক্ষ্য</h2>
+            <p>আমরা কোনো বাণিজ্যিক প্রতিষ্ঠান নই। এটি বাংলাদেশের ৬৮,০০০ গ্রামের যুবকদের নিয়ে গড়া একটি বিশাল মানবিক ও সামাজিক পরিবার। আমাদের মূল কাজ হলো দেশের প্রতিটি গ্রামের মানুষকে বিপদে-আপদে নিঃস্বার্থভাবে সহযোগিতা করা এবং যুবসমাজকে একতাবদ্ধ রাখা।</p>
+        </section>
+
+        <!-- Member Requirements Section -->
+        <section class="card">
+            <h2><i class="fa-solid fa-user-check"></i> মেম্বার হওয়ার সুনির্দিষ্ট যোগ্যতা</h2>
+            <p>যাকে আমরা গ্রাম থেকে নির্বাচন করব, তার মধ্যে নিচের গুণাবলীগুলো থাকা বাধ্যতামূলক:</p>
+            <div class="facility-grid">
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-heart-circle-check"></i></div>
+                    <h3>সততা ও মানসিকতা</h3>
+                    <p>নিঃস্বার্থভাবে মানুষের পাশে দাঁড়ানোর মনমানসিকতা এবং নিজ এলাকায় সৎ হিসেবে পরিচিত হতে হবে।</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-mobile-screen-button"></i></div>
+                    <h3>নিয়মিত সক্রিয়তা</h3>
+                    <p>স্মার্টফোন ব্যবহার করে প্রতিদিন মাত্র ৫ মিনিট সময় দিয়ে গ্রুপের প্রমোশনাল কাজ নিয়মিত করতে হবে।</p>
+                </div>
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-handshake-angle"></i></div>
+                    <h3>দায়িত্বশীল নেতৃত্ব</h3>
+                    <p>গ্রামের যেকোনো সামাজিক বা সংকটে বুদ্ধিমত্তা ও সাহসিকতার সাথে নেতৃত্ব দেওয়ার মানসিকতা থাকতে হবে।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Facilities Section (মেম্বারদের সুবিধাসমূহ) -->
+        <section class="card">
+            <h2><i class="fa-solid fa-shield-heart"></i> মেম্বারদের জন্য আজীবনের সুরক্ষাবলয় ও সুবিধাসমূহ</h2>
+            
+            <div class="facility-grid">
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-briefcase"></i></div>
+                    <h3>নিশ্চিত কর্মসংস্থান ও ক্যারিয়ার</h3>
+                    <p>গ্রুপের সক্রিয় ও বিশ্বস্ত মেম্বারদের জন্য নিজস্ব প্রজেক্ট ও কার্যক্রমে অগ্রাধিকার ভিত্তিতে স্থায়ী কর্মসংস্থানের সুব্যবস্থা করা হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-hospital"></i></div>
+                    <h3>বড় রোগের চিকিৎসা সহায়তা</h3>
+                    <p>ক্যান্সার, হার্ট অ্যাটাক বা কিডনির মতো বড় রোগে আক্রান্ত হলে সেন্ট্রাল ফান্ড থেকে বড় অঙ্কের আর্থিক সহায়তা দেওয়া হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-droplet"></i></div>
+                    <h3>১ ক্লিকে রক্তদান নেটওয়ার্ক</h3>
+                    <p>পরিবারের প্রয়োজনে দেশের যেকোনো প্রান্তে মুহূর্তের মধ্যে রক্তের ব্যবস্থা করা হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-scale-balanced"></i></div>
+                    <h3>আইনি ও প্রশাসনিক সুরক্ষা</h3>
+                    <p>অন্যায়ভাবে কোনো আইনি ঝামেলায় পড়লে আমাদের প্যানেল আইনজীবীরা সম্পূর্ণ বিনামূল্যে পাশে দাঁড়াবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-people-roof"></i></div>
+                    <h3>জরুরি ব্যাকআপ ও সম্মান</h3>
+                    <p>অপরিচিত এলাকায় বিপদে পড়লে স্থানীয় বন্ধুরা উদ্ধার করবে এবং এলাকার মানবতার কাজের মূল নেতৃত্ব আপনার হাতে থাকবে।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Future Plans Section (ভবিষ্যতের পরিকল্পনা ও অর্থনৈতিক বিপ্লব) -->
+        <section class="card">
+            <h2><i class="fa-solid fa-rocket"></i> ভবিষ্যতের পরিকল্পনা ও অর্থনৈতিক রূপরেখা</h2>
+            
+            <div class="facility-grid">
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-globe"></i></div>
+                    <h3>রপ্তানিমুখী উৎপাদন ও অর্থনীতি</h3>
+                    <p>চীন বা উন্নত বিশ্বের আদলে দেশের প্রতিটি গ্রামকে উৎপাদনমুখী করে বিশ্ববাজারে পণ্য রপ্তানির মাধ্যমে অর্থনৈতিক বিপ্লব ঘটানো হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-store"></i></div>
+                    <h3>ডিজিটাল উদ্যোক্তা হাব</h3>
+                    <p>প্রতিটি গ্রামের তরুণদের নিয়ে লোকাল ই-কমার্স এবং অনলাইন বিজনেস নেটওয়ার্ক গড়ে তোলা হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-seedling"></i></div>
+                    <h3>আধুনিক কৃষি ও সমবায় বাজার</h3>
+                    <p>কৃষক ও উদ্যোক্তাদের সরাসরি ক্রেতার সাথে যুক্ত করতে দেশব্যাপী নিজস্ব সমবায় সাপ্লাই চেইন তৈরি করা হবে।</p>
+                </div>
+
+                <div class="feature-box">
+                    <div class="icon-circle"><i class="fa-solid fa-laptop-code"></i></div>
+                    <h3>যুব আইটি ও ফ্রিল্যান্সিং একাডেমি</h3>
+                    <p>বেকার যুবসমাজকে আধুনিক প্রযুক্তিতে দক্ষ করে তুলতে ফ্রিল্যান্সিং ও টেকনিক্যাল স্কিল ডেভেলপমেন্ট ট্রেনিং সেন্টার স্থাপন করা হবে।</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rules & Task Section -->
+        <section class="card">
+            <h2><i class="fa-solid fa-clipboard-check"></i> আমাদের নিয়ম ও দৈনিক কাজ</h2>
+            <p>কাজ একদম সহজ ও পানির মতো পরিষ্কার। নিজের ব্যক্তিগত ফেসবুক আইডি ব্যবহার করা যাবে না; গ্রুপের নির্দিষ্ট নামে নতুন ফেসবুক অ্যাকাউন্ট খুলে নিজ এলাকার লোকজনকে ফ্রেন্ড বানিয়ে প্রতিদিন মাত্র ৫ মিনিট সময় দিয়ে আমাদের দেওয়া ২-৩টি পোস্ট নিয়মিত শেয়ার করতে হবে।</p>
+            <div class="rules-box">
+                <p><i class="fa-solid fa-circle-check text-green"></i> প্রতিদিন নিয়ম মেনে কাজ করলে আপনার আইডি "গ্রিন জোন"-এ থাকবে।</p>
+                <p><i class="fa-solid fa-circle-xmark text-red"></i> বিপদের সময় ব্যাকগ্রাউন্ড চেক করে এই কর্মঠ মেম্বারদেরই সব সাহায্য দেওয়া হবে (ফাঁকিবাজদের জন্য কোনো সাহায্য নেই)।</p>
+            </div>
+        </section>
+
+        <!-- Bottom Action Buttons Section (Login & Register) -->
+        <section class="card action-card">
+            <h2>আপনার গ্রামের আসনটি কি খালি আছে?</h2>
+            <p>দেরি না করে আজই আমাদের এই বিশাল মানবিক পরিবারের অংশ হয়ে যান। নিচের বাটন থেকে লগইন বা রেজিস্ট্রেশন করুন।</p>
+            <div class="bottom-buttons">
+                <a href="login.html" class="btn-action btn-login">
+                    <i class="fa-solid fa-right-to-bracket"></i> লগইন (Login)
+                </a>
+                <a href="register.html" class="btn-action btn-reg">
+                    <i class="fa-solid fa-user-plus"></i> রেজিস্ট্রেশন (Register)
+                </a>
+            </div>
+        </section>
+
+        <footer>
+            <p>&copy; 2026 Unity Bondhu Group. All Rights Reserved.</p>
+        </footer>
+
+    </div>
+
+    <!-- Supabase থেকে মোট মেম্বার কাউন্ট করার জন্য স্ক্রিপ্ট -->
+    <script>
+        const SUPABASE_URL = 'qneicfttboxzorcvhzmk'; // তোমার Supabase প্রজেক্টের URL এখানে বসাবে
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE'; // তোমার Supabase প্রজেক্টের Anon Key এখানে বসাবে
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        async function fetchMemberCounts() {
+            try {
+                // members টেবিল থেকে মোট মেম্বার গণনা করা
+                const { count, error } = await _supabase
+                    .from('members')
+                    .select('*', { count: 'exact', head: true });
+
+                if (error) throw error;
+
+                const totalVillages = 68000;
+                const activeMembers = count || 0;
+                const remainingSeats = totalVillages - activeMembers;
+
+                // সংখ্যাগুলো বাংলায় বা সাধারণ ফরম্যাটে দেখানো
+                document.getElementById('activeMembersCount').innerText = activeMembers.toLocaleString('bn-BD') + '+';
+                document.getElementById('remainingSeatsCount').innerText = remainingSeats.toLocaleString('bn-BD');
+
+            } catch (err) {
+                console.error('Error fetching counts:', err);
+                document.getElementById('activeMembersCount').innerText = '৪,২৫০+';
+                document.getElementById('remainingSeatsCount').innerText = '৬৩,৭৫০';
+            }
+        }
+
+        fetchMemberCounts();
+    </script>
+
+</body>
+</html>

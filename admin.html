@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন লগইন - ইউনিটি বন্ধু গ্রুপ</title>
+    <!-- FontAwesome আইকন -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <div class="tg-app-container" style="max-width: 400px; margin-top: 50px;">
+        
+        <header class="tg-header" style="justify-content: center; text-align: center;">
+            <div class="user-profile-box" style="flex-direction: column;">
+                <div class="user-info" style="text-align: center;">
+                    <h3><i class="fa-solid fa-shield-halved" style="color:#2ea6ff;"></i> অ্যাডমিন পোর্টাল</h3>
+                    <p>লগইন করতে আপনার তথ্য দিন</p>
+                </div>
+            </div>
+        </header>
+
+        <section class="tg-submit-section" style="margin-top: 15px;">
+            <form id="adminLoginForm" class="tg-form">
+                <div class="tg-input-group">
+                    <label>অ্যাডমিন মোবাইল নম্বর</label>
+                    <input type="text" id="adminMobile" placeholder="01833628814" required>
+                </div>
+                <div class="tg-input-group">
+                    <label>পাসওয়ার্ড</label>
+                    <input type="password" id="adminPassword" placeholder="পাসওয়ার্ড দিন" required>
+                </div>
+                <button type="submit" id="loginBtn" class="tg-submit-btn" style="background: var(--tg-primary);">
+                    <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
+                </button>
+            </form>
+        </section>
+
+    </div>
+
+    <script>
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24i'$.replace('$', '.eyJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE'); // Keep original key below if needed, or use full key:
+        
+        // সঠিক Supabase Key সহ ইনিশিয়ালাইজেশন:
+        const realSupabaseUrl = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const realSupabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        const _supabase = supabase.createClient(realSupabaseUrl, realSupabaseKey);
+
+        document.getElementById('adminLoginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const btn = document.getElementById('loginBtn');
+            const mobile = document.getElementById('adminMobile').value.trim();
+            const password = document.getElementById('adminPassword').value.trim();
+
+            btn.innerText = 'চেক করা হচ্ছে...';
+            btn.disabled = true;
+
+            try {
+                // Supabase এর admin_users টেবিল থেকে মোবাইল ও পাসওয়ার্ড চেক করা
+                const { data, error } = await _supabase
+                    .from('admin_users')
+                    .select('*')
+                    .eq('mobile', mobile)
+                    .eq('password', password)
+                    .single();
+
+                if (error || !data) {
+                    alert('ভুল মোবাইল নম্বর অথবা পাসওয়ার্ড!');
+                    btn.innerText = 'লগইন করুন';
+                    btn.disabled = false;
+                    return;
+                }
+
+                // সফলভাবে লগইন হলে সেশন সেভ করে সরাসরি ড্যাশবোর্ডে রিডাইরেক্ট করবে
+                localStorage.setItem('isAdminLoggedIn', 'true');
+                localStorage.setItem('adminName', data.admin_name || 'Admin');
+                
+                alert('স্বাগতম, সফলভাবে লগইন হয়েছে!');
+                window.location.href = 'admin_dashboard.htm';
+
+            } catch (err) {
+                console.error('Error:', err);
+                alert('লগইন করতে সমস্যা হয়েছে!');
+                btn.innerText = 'লগইন করুন';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

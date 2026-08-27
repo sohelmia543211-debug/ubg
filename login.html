@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>লগইন - ইউনিটি বন্ধু গ্রুপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase CDN যুক্ত করা হলো -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171c3d 100%);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(16, 185, 129, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 450px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .form-header h1 {
+            font-size: 2rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-footer a {
+            color: #34d399;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .back-home {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+        }
+
+        .back-home:hover {
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h1>লগইন</h1>
+            <p>আপনার ইউনিটি বন্ধু গ্রুপ অ্যাকাউন্টে প্রবেশ করুন</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="input-group">
+                <label>মোবাইল নম্বর</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="loginPhone" placeholder="আপনার রেজিস্টার্ড নম্বর দিন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>পাসওয়ার্ড</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="loginPassword" placeholder="আপনার পাসওয়ার্ড দিন" required>
+                </div>
+            </div>
+
+            <button type="submit" id="loginBtn" class="btn-submit">
+                <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
+            </button>
+        </form>
+
+        <div class="form-footer">
+            <p>একাউন্ট নেই? <a href="register.html">রেজিস্ট্রেশন করুন</a></p>
+            <a href="index.html" class="back-home"><i class="fa-solid fa-arrow-left"></i> হোম পেজে ফিরে যান</a>
+        </div>
+    </div>
+
+    <!-- লগইন লজিক এবং সেশন চেকিং এর জাভাস্ক্রিপ্ট -->
+    <script>
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // পেজ লোড হওয়ার সাথে সাথেই চেক করা মেম্বার অলরেডি লগইন করা আছে কিনা
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedPhone = localStorage.getItem('userPhone');
+            const savedName = localStorage.getItem('userName');
+
+            // যদি আগে থেকেই ইনফো সেভ থাকে, তবে আর লগইন পেজে থাকতে হবে না, সোজা হোমে চলে যাবে
+            if (savedPhone && savedName) {
+                window.location.href = 'home_page.html';
+            }
+        });
+
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // পেজ রিলোড হওয়া বন্ধ করা হলো
+
+            const loginBtn = document.getElementById('loginBtn');
+            const originalText = loginBtn.innerHTML;
+            loginBtn.innerText = 'যাচাই করা হচ্ছে...';
+            loginBtn.disabled = true;
+
+            const phone = document.getElementById('loginPhone').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+
+            try {
+                // Supabase-এর 'members' টেবিল থেকে মোবাইল ও পাসওয়ার্ড মিলিয়ে দেখা
+                const { data, error } = await _supabase
+                    .from('members')
+                    .select('*')
+                    .eq('mobile', phone)
+                    .eq('password', password)
+                    .single();
+
+                if (error || !data) {
+                    throw new Error('ভুল মোবাইল নম্বর অথবা পাসওয়ার্ড!');
+                }
+
+                // লগইন সফল হলে ইউজারের নাম এবং তথ্য লোকালস্টোরেজে পার্মানেন্ট সেভ করা
+                localStorage.setItem('userName', data.full_name);
+                localStorage.setItem('userPhone', data.mobile);
+
+                alert('লগইন সফল হয়েছে! স্বাগতম ' + data.full_name);
+                
+                // হোম পেজ বা ড্যাশবোর্ডে রিডাইরেক্ট করা
+                window.location.href = 'home_page.html';
+
+            } catch (err) {
+                console.error('Login Error:', err);
+                alert('লগইন ব্যর্থ হয়েছে: ' + (err.message || 'দয়া করে সঠিক তথ্য দিন।'));
+                loginBtn.innerHTML = originalText;
+                loginBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
+</html>

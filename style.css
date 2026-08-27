@@ -1,0 +1,234 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary: #10b981;
+    --primary-dark: #059669;
+    --accent: #f43f5e;
+    --bg-gradient: linear-gradient(135deg, #090d16 0%, #171c3d 100%);
+    --card-bg: rgba(255, 255, 255, 0.04);
+    --card-border: rgba(16, 185, 129, 0.2);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+body {
+    background: var(--bg-gradient);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding: 20px 10px;
+}
+
+header {
+    text-align: center;
+    padding: 40px 20px;
+    max-width: 900px;
+    margin: 0 auto 20px auto;
+}
+
+header h1 {
+    font-size: 3.2rem;
+    font-weight: 800;
+    background: linear-gradient(to right, #34d399, #60a5fa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 10px;
+    letter-spacing: -1px;
+}
+
+.slogan {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    font-style: italic;
+    margin-bottom: 15px;
+}
+
+.alert-badge {
+    display: inline-block;
+    background: rgba(244, 63, 94, 0.15);
+    color: #fb7185;
+    border: 1px solid rgba(244, 63, 94, 0.3);
+    padding: 8px 22px;
+    border-radius: 50px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(244, 63, 94, 0.2);
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* Main Card Style */
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    padding: 35px;
+    border-radius: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+
+.card h2 {
+    font-size: 1.6rem;
+    color: #34d399;
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.card p {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    line-height: 1.7;
+}
+
+/* Separate Facility Grid & Cards with Light Green Glow */
+.facility-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.feature-box {
+    background: rgba(16, 185, 129, 0.03);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    padding: 25px;
+    border-radius: 20px;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(16, 185, 129, 0.05);
+}
+
+.feature-box:hover {
+    transform: translateY(-5px);
+    border-color: rgba(16, 185, 129, 0.6);
+    box-shadow: 0 12px 30px rgba(16, 185, 129, 0.15);
+    background: rgba(16, 185, 129, 0.06);
+}
+
+.icon-circle {
+    width: 65px;
+    height: 65px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px auto;
+}
+
+.icon-circle i {
+    font-size: 1.8rem;
+    color: #34d399;
+}
+
+.feature-box h3 {
+    font-size: 1.15rem;
+    color: white;
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.feature-box p {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+}
+
+/* Rules Box */
+.rules-box {
+    margin-top: 15px;
+    background: rgba(255, 255, 255, 0.02);
+    border-left: 4px solid var(--primary);
+    padding: 15px 20px;
+    border-radius: 0 12px 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.rules-box p {
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.text-green { color: #34d399; }
+.text-red { color: #fb7185; }
+
+/* Action Card with Two Buttons (Login & Register) */
+.action-card {
+    text-align: center;
+    border: 2px solid rgba(16, 185, 129, 0.4);
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(255, 255, 255, 0.02));
+}
+
+.bottom-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 25px;
+    flex-wrap: wrap;
+}
+
+.btn-action {
+    flex: 1;
+    min-width: 200px;
+    padding: 16px 25px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 14px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-login {
+    background: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-login:hover {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: white;
+    transform: translateY(-2px);
+}
+
+.btn-reg {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+    box-name: shadow;
+    box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+}
+
+.btn-reg:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 30px rgba(16, 185, 129,5);
+    background: linear-gradient(135deg, #059669, #047857);
+}
+
+footer {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 40px;
+}

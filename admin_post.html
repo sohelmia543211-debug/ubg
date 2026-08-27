@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>অ্যাডমিন পোস্ট প্যানেল - ইউনিটি বন্ধু গ্রুপ</title>
+    <!-- FontAwesome আইকন -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <div class="tg-app-container">
+        <!-- হেডার -->
+        <header class="tg-header">
+            <div class="user-profile-box">
+                <div class="user-info">
+                    <h3><i class="fa-solid fa-shield-halved" style="color:#2ea6ff;"></i> অ্যাডমিন পোস্ট প্যানেল</h3>
+                    <p>মেম্বারদের জন্য ছবি সহ পোস্ট বা নোটিশ পাবলিশ করুন</p>
+                </div>
+            </div>
+            <a href="admin_dashboard.htm" class="tg-logout-btn" style="text-decoration:none;"><i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ড</a>
+        </header>
+
+        <!-- পোস্ট তৈরি করার ফর্ম -->
+        <section class="tg-submit-section" style="margin-top: 15px;">
+            <div class="feed-title">
+                <i class="fa-solid fa-pen-to-square"></i> ছবি সহ নতুন পোস্ট বা কাজের নির্দেশনা তৈরি করুন
+            </div>
+            <form id="adminPostForm" class="tg-form">
+                <div class="tg-input-group">
+                    <label>পোস্টের শিরোনাম (Title)</label>
+                    <input type="text" id="postTitle" placeholder="যেমন: আজকের কাজের ব্যানার বা ছবি পোস্ট..." required>
+                </div>
+                <div class="tg-input-group">
+                    <label>বিস্তারিত বিবরণ ও নির্দেশনা (Description)</label>
+                    <textarea id="postDescription" placeholder="এখানে মেম্বারদের কী করতে হবে তা বিস্তারিত লিখুন..." rows="5" style="width:100%; padding:11px 14px; background:rgba(0,0,0,0.3); border:1px solid var(--tg-border); border-radius:10px; color:white; font-size:0.9rem; outline:none; resize:none;" required></textarea>
+                </div>
+                <div class="tg-input-group">
+                    <label>ছবির লিংক (Image URL)</label>
+                    <input type="url" id="postImageUrl" placeholder="যেমন: Imgur বা যেকোনো জায়গার ছবির সরাসরি লিংক দিন">
+                </div>
+                <div class="tg-input-group">
+                    <label>কাজের বা ডাউনলোডের লিংক (যদি থাকে)</label>
+                    <input type="url" id="postFileLink" placeholder="https://example.com/task">
+                </div>
+                <button type="submit" id="publishBtn" class="tg-submit-btn" style="background: var(--tg-primary);">
+                    <i class="fa-solid fa-paper-plane"></i> পোস্ট পাবলিশ করুন
+                </button>
+            </form>
+        </section>
+    </div>
+
+    <script>
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // পোস্ট সাবমিট করার কোড
+        document.getElementById('adminPostForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const btn = document.getElementById('publishBtn');
+            btn.innerText = 'পাবলিশ হচ্ছে...';
+            btn.disabled = true;
+
+            const title = document.getElementById('postTitle').value.trim();
+            const description = document.getElementById('postDescription').value.trim();
+            const imageUrl = document.getElementById('postImageUrl').value.trim();
+            const fileLink = document.getElementById('postFileLink').value.trim();
+
+            try {
+                const { error } = await _supabase
+                    .from('admin_posts')
+                    .insert([
+                        { 
+                            title: title, 
+                            description: description, 
+                            image_url: imageUrl, 
+                            file_link: fileLink 
+                        }
+                    ]);
+
+                if (error) throw error;
+
+                alert('সফলভাবে ছবি সহ পোস্ট পাবলিশ করা হয়েছে!');
+                document.getElementById('adminPostForm').reset();
+            } catch (err) {
+                console.error('Error:', err);
+                alert('পোস্ট করতে সমস্যা হয়েছে: ' + err.message);
+            } finally {
+                btn.innerText = 'পোস্ট পাবলিশ করুন';
+                btn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
