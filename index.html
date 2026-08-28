@@ -331,7 +331,7 @@
             </div>
         </section>
 
-        <!-- Facilities Section (মেম্বারদের সুবিধাসমূহ) -->
+        <!-- Facilities Section -->
         <section class="card">
             <h2><i class="fa-solid fa-shield-heart"></i> মেম্বারদের জন্য আজীবনের সুরক্ষাবলয় ও সুবিধাসমূহ</h2>
             
@@ -368,7 +368,7 @@
             </div>
         </section>
 
-        <!-- Future Plans Section (ভবিষ্যতের পরিকল্পনা ও অর্থনৈতিক বিপ্লব) -->
+        <!-- Future Plans Section -->
         <section class="card">
             <h2><i class="fa-solid fa-rocket"></i> ভবিষ্যতের পরিকল্পনা ও অর্থনৈতিক রূপরেখা</h2>
             
@@ -409,7 +409,7 @@
             </div>
         </section>
 
-        <!-- Bottom Action Buttons Section (Login & Register) -->
+        <!-- Bottom Action Buttons Section -->
         <section class="card action-card">
             <h2>আপনার গ্রামের আসনটি কি খালি আছে?</h2>
             <p>দেরি না করে আজই আমাদের এই বিশাল মানবিক পরিবারের অংশ হয়ে যান। নিচের বাটন থেকে লগইন বা রেজিস্ট্রেশন করুন।</p>
@@ -431,14 +431,13 @@
 
     <!-- Supabase থেকে মোট মেম্বার কাউন্ট করার জন্য স্ক্রিপ্ট -->
     <script>
-        const SUPABASE_URL = 'qneicfttboxzorcvhzmk'; // তোমার Supabase প্রজেক্টের URL এখানে বসাবে
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE'; // তোমার Supabase প্রজেক্টের Anon Key এখানে বসাবে
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co'; // সঠিক URL ফরম্যাট দেওয়া হলো
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE'; 
         
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
         async function fetchMemberCounts() {
             try {
-                // members টেবিল থেকে মোট মেম্বার গণনা করা
                 const { count, error } = await _supabase
                     .from('members')
                     .select('*', { count: 'exact', head: true });
@@ -449,7 +448,6 @@
                 const activeMembers = count || 0;
                 const remainingSeats = totalVillages - activeMembers;
 
-                // সংখ্যাগুলো বাংলায় বা সাধারণ ফরম্যাটে দেখানো
                 document.getElementById('activeMembersCount').innerText = activeMembers.toLocaleString('bn-BD') + '+';
                 document.getElementById('remainingSeatsCount').innerText = remainingSeats.toLocaleString('bn-BD');
 
