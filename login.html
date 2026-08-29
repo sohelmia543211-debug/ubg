@@ -108,6 +108,25 @@
             box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
         }
 
+        /* ফরগট পাসওয়ার্ড বা লিংকের স্টাইল */
+        .forgot-password-container {
+            text-align: right;
+            margin-top: -10px;
+            margin-bottom: 20px;
+        }
+
+        .forgot-password-container a {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .forgot-password-container a:hover {
+            color: #34d399;
+            text-decoration: underline;
+        }
+
         .btn-submit {
             width: 100%;
             padding: 15px;
@@ -120,7 +139,7 @@
             cursor: pointer;
             box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 5px;
         }
 
         .btn-submit:hover {
@@ -184,6 +203,11 @@
                 </div>
             </div>
 
+            <!-- পাসওয়ার্ড ভুলে গেছেন বাটন/লিংক -->
+            <div class="forgot-password-container">
+                <a href="#" id="forgotPasswordBtn"><i class="fa-solid fa-circle-question"></i> পাসওয়ার্ড ভুলে গেছেন?</a>
+            </div>
+
             <button type="submit" id="loginBtn" class="btn-submit">
                 <i class="fa-solid fa-right-to-bracket"></i> লগইন করুন
             </button>
@@ -203,19 +227,32 @@
         
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        // পেজ লোড হওয়ার সাথে সাথেই চেক করা মেম্বার অলরেডি লগইন করা আছে কিনা
+        // পেজ লোড হওয়ার সাথে সাথেই চেক করা মেম্বার অলরেডি লগইন করা আছে কিনা
         window.addEventListener('DOMContentLoaded', () => {
             const savedPhone = localStorage.getItem('userPhone');
             const savedName = localStorage.getItem('userName');
 
-            // যদি আগে থেকেই ইনফো সেভ থাকে, তবে আর লগইন পেজে থাকতে হবে না, সোজা হোমে চলে যাবে
             if (savedPhone && savedName) {
                 window.location.href = 'home_page.html';
             }
         });
 
+        // পাসওয়ার্ড ভুলে গেছেন লিংকের জন্য ইভেন্ট হ্যান্ডলার
+        document.getElementById('forgotPasswordBtn').addEventListener('click', function(e) {
+            e.preventDefault();
+            const userPhoneInput = document.getElementById('loginPhone').value.trim();
+            
+            // হোয়াটসঅ্যাপ সাপোর্ট লিঙ্ক (আপনার প্রয়োজনমতো নম্বর পরিবর্তন করে নিতে পারেন)
+            let whatsappUrl = "https://wa.me/+8801700000000?text=আসসালামু আলাইকুম, আমি ইউনিটি বন্ধু গ্রুপে আমার পাসওয়ার্ডটি ভুলে গেছি। আমার রেজিস্টার্ড মোবাইল নম্বর: " + (userPhoneInput || "[এখানে নম্বর দিন]");
+            
+            let action = confirm("পাসওয়ার্ড পুনরুদ্ধারের জন্য এডমিন বা সাপোর্ট প্যানেলের সাথে হোয়াটসঅ্যাপে যোগাযোগ করুন। হোয়াটসঅ্যাপে মেসেজ পাঠাতে চান?");
+            if (action) {
+                window.open(whatsappUrl, '_blank');
+            }
+        });
+
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault(); // পেজ রিলোড হওয়া বন্ধ করা হলো
+            e.preventDefault();
 
             const loginBtn = document.getElementById('loginBtn');
             const originalText = loginBtn.innerHTML;
@@ -226,7 +263,6 @@
             const password = document.getElementById('loginPassword').value.trim();
 
             try {
-                // Supabase-এর 'members' টেবিল থেকে মোবাইল ও পাসওয়ার্ড মিলিয়ে দেখা
                 const { data, error } = await _supabase
                     .from('members')
                     .select('*')
@@ -238,13 +274,10 @@
                     throw new Error('ভুল মোবাইল নম্বর অথবা পাসওয়ার্ড!');
                 }
 
-                // লগইন সফল হলে ইউজারের নাম এবং তথ্য লোকালস্টোরেজে পার্মানেন্ট সেভ করা
                 localStorage.setItem('userName', data.full_name);
                 localStorage.setItem('userPhone', data.mobile);
 
                 alert('লগইন সফল হয়েছে! স্বাগতম ' + data.full_name);
-                
-                // হোম পেজ বা ড্যাশবোর্ডে রিডাইরেক্ট করা
                 window.location.href = 'home_page.html';
 
             } catch (err) {
