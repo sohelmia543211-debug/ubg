@@ -43,6 +43,11 @@
                     <i class="fa-solid fa-pen-to-square"></i> নতুন পোস্ট বা নোটিশ তৈরি করুন
                 </a>
 
+                <!-- হেল্প অ্যাডমিন প্যানেলে যাওয়ার বাটন (এখানে আপনার তৈরি করা হেল্প পেজের সঠিক নাম বসাবেন, যেমন: hellpeadmin.html) -->
+                <a href="hellpeadmin.html" class="tg-btn" style="text-decoration:none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; font-size: 1rem; background: #8b5cf6; color: white;">
+                    <i class="fa-solid fa-hands-holding-child"></i> হেল্প অ্যাডমিন প্যানেল দেখুন
+                </a>
+
                 <!-- সাধারণ হোম পেজ দেখার বাটন -->
                 <a href="home_page.html" class="tg-submit-btn" style="text-decoration:none; display: flex; align-items: center; justify-content: center; gap: 10px; background: #34495e; margin-top: 0;">
                     <i class="fa-solid fa-house"></i> মেম্বার হোম পেজ দেখুন
@@ -76,12 +81,10 @@
 
         <!-- তালিকা ২: এখনো কাজ করে নাই (বাকি মেম্বারদের লিস্ট ও নোটিশ বাটন) -->
         <section class="tg-submit-section" style="margin-top: 25px;">
-            <!-- এখানে ফ্লেক্স কন্টেইনারের দিক পরিবর্তন করে ওপর-নিচ (column) করে দেওয়া হয়েছে, যাতে লেখা ও বাটন আলাদা দুই লাইনে থাকে -->
             <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px; gap: 12px;">
                 <div class="feed-title" style="color: #ef4444; margin: 0;">
                     <i class="fa-solid fa-triangle-exclamation"></i> তালিকা ২: এখনো কাজ করে নাই (বাকি মেম্বারগণ)
                 </div>
-                <!-- ১ ক্লিকে সবাইকে নোটিশ বা কপি করার বাটন (এখন একদম নিচে সুন্দরভাবে আলাদা লাইনে থাকবে) -->
                 <button id="notifyAllBtn" onclick="sendBulkNotice()" style="background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: none; font-size: 0.85rem; width: 100%; text-align: center;">
                     <i class="fa-solid fa-bullhorn"></i> ১ ক্লিকে সবাইকে নোটিশ পাঠান (কপি)
                 </button>
@@ -114,15 +117,13 @@
         
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let pendingMembersList = []; // বাকি মেম্বারদের তালিকা গ্লোবালভাবে সেভ রাখার জন্য
+        let pendingMembersList = [];
 
-        // লোকালস্টোরেজ থেকে অ্যাডমিনের নাম বসানো
         const adminName = localStorage.getItem('adminName');
         if (adminName) {
             document.getElementById('adminDisplayName').innerText = adminName;
         }
 
-        // অ্যাডমিন লগআউট ফাংশন
         function adminLogout() {
             localStorage.removeItem('isAdminLoggedIn');
             localStorage.removeItem('adminName');
@@ -130,25 +131,20 @@
             window.location.href = 'admin.html';
         }
 
-        // দুটি তালিকা একসাথে লোড ও ফিল্টার করার প্রধান ফাংশন
         async function loadTaskStatus() {
             const submittedTableBody = document.getElementById('submittedTasksBody');
             const pendingTableBody = document.getElementById('pendingTasksBody');
             const notifyBtn = document.getElementById('notifyAllBtn');
 
             try {
-                // ১. সমস্ত রেজিস্টার্ড মেম্বারদের নিয়ে আসা
                 const { data: members, error: memError } = await _supabase.from('members').select('*');
                 if (memError) throw memError;
 
-                // ২. যারা কাজ জমা দিয়েছে তাদের নিয়ে আসা
                 const { data: submitted, error: subError } = await _supabase.from('submitted_tasks').select('*');
                 if (subError) throw subError;
 
-                // যারা জমা দিয়েছে তাদের নামগুলোর একটা সেট (Set) তৈরি করা
                 const submittedNames = new Set((submitted || []).map(item => item.user_name ? item.user_name.trim().toLowerCase() : ''));
 
-                // --- তালিকা ১: কাজ সম্পন্ন করা মেম্বারদের রেন্ডার ---
                 if (!submitted || submitted.length === 0) {
                     submittedTableBody.innerHTML = `<tr><td colspan="3" style="padding: 15px; text-align: center; color: var(--tg-text-muted);">এখনো কোনো মেম্বার কাজ জমা দেননি।</td></tr>`;
                 } else {
@@ -169,7 +165,6 @@
                     });
                 }
 
-                // --- তালিকা ২: এখনো কাজ করে নাই (বাকি) মেম্বারদের ফিল্টার ও রেন্ডার ---
                 pendingMembersList = (members || []).filter(m => {
                     const mName = m.full_name ? m.full_name.trim().toLowerCase() : (m.name ? m.name.trim().toLowerCase() : '');
                     return !submittedNames.has(mName);
@@ -179,7 +174,7 @@
                     pendingTableBody.innerHTML = `<tr><td colspan="3" style="padding: 15px; text-align: center; color: #34d399;">দারুণ! সব মেম্বারই আজকের কাজ সম্পন্ন করেছে।</td></tr>`;
                     notifyBtn.style.display = 'none';
                 } else {
-                    notifyBtn.style.display = 'block'; // বাকি মেম্বার থাকলে নোটিশ বাটন দেখাবে
+                    notifyBtn.style.display = 'block';
                     pendingTableBody.innerHTML = '';
                     pendingMembersList.forEach(member => {
                         const mName = member.full_name || member.name || 'নাম পাওয়া যায়নি';
@@ -205,7 +200,6 @@
             }
         }
 
-        // ব্যক্তিগত তাগাদা পাঠানোর ফাংশন (WhatsApp)
         function sendReminder(name, phone) {
             const message = `আসসালামু আলাইকুম ${name}, ইউনিটি বন্ধু গ্রুপের আজকের কাজটি এখনো আপনি জমা দেননি। দয়া করে দ্রুত কাজটি সম্পন্ন করুন।`;
             if (phone && phone.length >= 11) {
@@ -216,7 +210,6 @@
             }
         }
 
-        // ১ ক্লিকে সমস্ত বাকি মেম্বারদের তালিকা ও নোটিশ কপি করার ফাংশন
         function sendBulkNotice() {
             if (pendingMembersList.length === 0) return;
 
@@ -236,7 +229,6 @@
             });
         }
 
-        // পেজ লোড হওয়ার সাথে সাথে ফাংশনটি কল হবে
         loadTaskStatus();
     </script>
 </body>

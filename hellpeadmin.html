@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>অ্যাডমিন ড্যাশবোর্ড - ইউনিটি বন্ধু গ্রুপ</title>
+    <title>হেল্প অ্যাডমিন প্যানেল - ইউনিটি বন্ধু গ্রুপ</title>
     <!-- FontAwesome আইকন -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Supabase SDK -->
@@ -12,96 +12,45 @@
 </head>
 <body>
 
-    <div class="tg-app-container" style="max-width: 850px;">
+    <div class="tg-app-container" style="max-width: 900px;">
         
-        <!-- অ্যাডমিন হেডার ও প্রফাইল সেকশন -->
+        <!-- হেডার সেকশন -->
         <header class="tg-header">
             <div class="user-profile-box">
-                <div class="avatar-wrapper" style="background: var(--tg-primary); display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 50px; height: 50px;">
-                    <i class="fa-solid fa-user-shield" style="font-size: 24px; color: white;"></i>
+                <div class="avatar-wrapper" style="background: #8b5cf6; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 50px; height: 50px;">
+                    <i class="fa-solid fa-hands-holding-child" style="font-size: 24px; color: white;"></i>
                 </div>
                 <div class="user-info">
-                    <h3 id="adminDisplayName">অ্যাডমিন প্যানেল</h3>
+                    <h3>হেল্প অ্যাডমিন প্যানেল</h3>
                     <p style="color: #2ecc71; font-size: 0.85rem;"><i class="fa-solid fa-circle" style="font-size: 8px;"></i> অনলাইন</p>
                 </div>
             </div>
-            <button class="tg-logout-btn" onclick="adminLogout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> লগআউট</button>
+            <a href="admin.html" class="tg-logout-btn" style="text-decoration: none; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ড</a>
         </header>
 
-        <!-- মূল কন্টেন্ট ও শর্টকাট অপশন -->
-        <section class="tg-submit-section" style="margin-top: 15px; text-align: center;">
-            <div class="feed-title" style="text-align: left;">
-                <i class="fa-solid fa-gauge-high"></i> অ্যাডমিন কন্ট্রোল প্যানেল
+        <!-- মূল কন্টেন্ট: ইমার্জেন্সি রিকোয়েস্ট লিস্ট -->
+        <section class="tg-submit-section" style="margin-top: 20px;">
+            <div class="feed-title" style="text-align: left; margin-bottom: 15px; color: #8b5cf6;">
+                <i class="fa-solid fa-headset"></i> মেম্বারদের হেল্প ও ইমার্জেন্সি রিকোয়েস্টসমূহ
             </div>
-            <p style="color: var(--tg-text-muted); font-size: 0.9rem; margin-bottom: 20px; text-align: left;">
-                 এখান থেকে আপনি খুব সহজেই মেম্বারদের কাজের অগ্রগতি ট্র্যাক করতে পারবেন এবং বাকিদের তাগাদা দিতে পারবেন।
+            <p style="color: var(--tg-text-muted); font-size: 0.9rem; margin-bottom: 20px;">
+                মেম্বারদের পাঠানো সকল সাহায্যের আবেদন নিচে দেখতে পাবেন। প্রয়োজনে তাদের সাথে যোগাযোগ করুন।
             </p>
-
-            <div style="display: flex; flex-direction: column; gap: 12px;">
-                <!-- নতুন পোস্ট পেজে যাওয়ার বাটন -->
-                <a href="admin_post.html" class="tg-btn tg-btn-blue" style="text-decoration:none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; font-size: 1rem;">
-                    <i class="fa-solid fa-pen-to-square"></i> নতুন পোস্ট বা নোটিশ তৈরি করুন
-                </a>
-
-                <!-- নতুন হেল্প অ্যাডমিন পেজে যাওয়ার বাটন (hellpeadmin.html) -->
-                <a href="hellpeadmin.html" class="tg-btn" style="text-decoration:none; display: flex; align-items: center; justify-content: center; gap: 10px; padding: 14px; font-size: 1rem; background: #8b5cf6; color: white;">
-                    <i class="fa-solid fa-hands-holding-child"></i> হেল্প অ্যাডমিন প্যানেল দেখুন
-                </a>
-
-                <!-- সাধারণ হোম পেজ দেখার বাটন -->
-                <a href="home_page.html" class="tg-submit-btn" style="text-decoration:none; display: flex; align-items: center; justify-content: center; gap: 10px; background: #34495e; margin-top: 0;">
-                    <i class="fa-solid fa-house"></i> মেম্বার হোম পেজ দেখুন
-                </a>
-            </div>
-        </section>
-
-        <!-- তালিকা ১: মেম্বারদের জমা দেওয়া কাজের লিস্ট সেকশন -->
-        <section class="tg-submit-section" style="margin-top: 25px;">
-            <div class="feed-title" style="text-align: left; margin-bottom: 15px; color: #10b981;">
-                <i class="fa-solid fa-circle-check"></i> তালিকা ১: কাজ সম্পন্ন করেছে যারা
-            </div>
             
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; text-align: left; color: white; font-size: 0.9rem;">
                     <thead>
-                        <tr style="background: rgba(16, 185, 129, 0.2); border-bottom: 2px solid #10b981;">
-                            <th style="padding: 12px;">মেম্বারের নাম</th>
-                            <th style="padding: 12px;">কাজের লিংক</th>
-                            <th style="padding: 12px;">জমা দেওয়ার সময়</th>
-                        </tr>
-                    </thead>
-                    <tbody id="submittedTasksBody">
-                        <tr>
-                            <td colspan="3" style="padding: 15px; text-align: center; color: var(--tg-text-muted);">লোড হচ্ছে...</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- তালিকা ২: এখনো কাজ করে নাই (বাকি মেম্বারদের লিস্ট ও নোটিশ বাটন) -->
-        <section class="tg-submit-section" style="margin-top: 25px;">
-            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-bottom: 15px; gap: 12px;">
-                <div class="feed-title" style="color: #ef4444; margin: 0;">
-                    <i class="fa-solid fa-triangle-exclamation"></i> তালিকা ২: এখনো কাজ করে নাই (বাকি মেম্বারগণ)
-                </div>
-                <button id="notifyAllBtn" onclick="sendBulkNotice()" style="background: #3b82f6; color: white; border: none; padding: 10px 16px; border-radius: 8px; cursor: pointer; font-weight: 600; display: none; font-size: 0.85rem; width: 100%; text-align: center;">
-                    <i class="fa-solid fa-bullhorn"></i> ১ ক্লিকে সবাইকে নোটিশ পাঠান (কপি)
-                </button>
-            </div>
-            
-            <div style="overflow-x: auto;">
-                <table style="width: 100%; border-collapse: collapse; text-align: left; color: white; font-size: 0.9rem;">
-                    <thead>
-                        <tr style="background: rgba(239, 68, 68, 0.2); border-bottom: 2px solid #ef4444;">
+                        <tr style="background: rgba(139, 92, 246, 0.2); border-bottom: 2px solid #8b5cf6;">
                             <th style="padding: 12px;">মেম্বারের নাম</th>
                             <th style="padding: 12px;">মোবাইল নম্বর</th>
-                            <th style="padding: 12px; text-align: center;">ব্যক্তিগত তাগাদা</th>
+                            <th style="padding: 12px;">সমস্যার বিবরণ (Details)</th>
+                            <th style="padding: 12px;">সময়</th>
+                            <th style="padding: 12px; text-align: center;">স্ট্যাটাস / একশন</th>
                         </tr>
                     </thead>
-                    <tbody id="pendingTasksBody">
+                    <tbody id="emergencyRequestsBody">
                         <tr>
-                            <td colspan="3" style="padding: 15px; text-align: center; color: var(--tg-text-muted);">লোড হচ্ছে...</td>
+                            <td colspan="5" style="padding: 20px; text-align: center; color: var(--tg-text-muted);">লোড হচ্ছে...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -117,119 +66,84 @@
         
         const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-        let pendingMembersList = [];
-
-        const adminName = localStorage.getItem('adminName');
-        if (adminName) {
-            document.getElementById('adminDisplayName').innerText = adminName;
-        }
-
-        function adminLogout() {
-            localStorage.removeItem('isAdminLoggedIn');
-            localStorage.removeItem('adminName');
-            alert('সফলভাবে লগআউট করা হয়েছে!');
-            window.location.href = 'admin.html';
-        }
-
-        async function loadTaskStatus() {
-            const submittedTableBody = document.getElementById('submittedTasksBody');
-            const pendingTableBody = document.getElementById('pendingTasksBody');
-            const notifyBtn = document.getElementById('notifyAllBtn');
+        async function loadEmergencyRequests() {
+            const tableBody = document.getElementById('emergencyRequestsBody');
 
             try {
-                const { data: members, error: memError } = await _supabase.from('members').select('*');
-                if (memError) throw memError;
+                const { data: requests, error } = await _supabase
+                    .from('emergency_requests')
+                    .select('*')
+                    .order('id', { ascending: false });
 
-                const { data: submitted, error: subError } = await _supabase.from('submitted_tasks').select('*');
-                if (subError) throw subError;
+                if (error) throw error;
 
-                const submittedNames = new Set((submitted || []).map(item => item.user_name ? item.user_name.trim().toLowerCase() : ''));
-
-                if (!submitted || submitted.length === 0) {
-                    submittedTableBody.innerHTML = `<tr><td colspan="3" style="padding: 15px; text-align: center; color: var(--tg-text-muted);">এখনো কোনো মেম্বার কাজ জমা দেননি।</td></tr>`;
-                } else {
-                    submittedTableBody.innerHTML = '';
-                    submitted.forEach(task => {
-                        const formattedDate = new Date(task.created_at).toLocaleString('bn-BD', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short'
-                        });
-
-                        submittedTableBody.innerHTML += `
-                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                                <td style="padding: 12px; font-weight: 600; color: #34d399;">${task.user_name || 'অজানা মেম্বার'}</td>
-                                <td style="padding: 12px;"><a href="${task.task_link}" target="_blank" style="color: #60a5fa; text-decoration: underline;"><i class="fa-solid fa-external-link-alt"></i> লিংক ভিজিট করুন</a></td>
-                                <td style="padding: 12px; color: var(--tg-text-muted); font-size: 0.85rem;">${formattedDate}</td>
-                            </tr>
-                        `;
-                    });
+                if (!requests || requests.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="5" style="padding: 20px; text-align: center; color: var(--tg-text-muted);">এখনো কোনো হেল্প রিকোয়েস্ট আসেনি।</td></tr>`;
+                    return;
                 }
 
-                pendingMembersList = (members || []).filter(m => {
-                    const mName = m.full_name ? m.full_name.trim().toLowerCase() : (m.name ? m.name.trim().toLowerCase() : '');
-                    return !submittedNames.has(mName);
+                tableBody.innerHTML = '';
+                requests.forEach(req => {
+                    const formattedDate = req.created_at ? new Date(req.created_at).toLocaleString('bn-BD', {
+                        dateStyle: 'medium',
+                        timeStyle: 'short'
+                    }) : 'সময় পাওয়া যায়নি';
+
+                    const mName = req.user_name || 'অজানা মেম্বার';
+                    const mPhone = req.mobile || 'নম্বর নেই';
+                    const details = req.details || 'বিবরণ নেই';
+                    const status = req.status || 'Pending';
+
+                    let statusBadge = status === 'Pending' 
+                        ? `<span style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">Pending</span>` 
+                        : `<span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem;">Resolved</span>`;
+
+                    tableBody.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <td style="padding: 12px; font-weight: 600; color: #f8fafc;">${mName}</td>
+                            <td style="padding: 12px; color: #60a5fa;">${mPhone}</td>
+                            <td style="padding: 12px; color: #e2e8f0; max-width: 250px; word-break: break-word;">${details}</td>
+                            <td style="padding: 12px; color: var(--tg-text-muted); font-size: 0.85rem;">${formattedDate}</td>
+                            <td style="padding: 12px; text-align: center; display: flex; gap: 8px; justify-content: center; align-items: center;">
+                                ${statusBadge}
+                                <button onclick="callMember('${mPhone}')" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;" title="কল করুন">
+                                    <i class="fa-solid fa-phone"></i>
+                                </button>
+                                <button onclick="deleteRequest(${req.id})" style="background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;" title="ডিলিট করুন">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
                 });
 
-                if (pendingMembersList.length === 0) {
-                    pendingTableBody.innerHTML = `<tr><td colspan="3" style="padding: 15px; text-align: center; color: #34d399;">দারুণ! সব মেম্বারই আজকের কাজ সম্পন্ন করেছে।</td></tr>`;
-                    notifyBtn.style.display = 'none';
-                } else {
-                    notifyBtn.style.display = 'block';
-                    pendingTableBody.innerHTML = '';
-                    pendingMembersList.forEach(member => {
-                        const mName = member.full_name || member.name || 'নাম পাওয়া যায়নি';
-                        const mPhone = member.mobile || 'নম্বর নেই';
-
-                        pendingTableBody.innerHTML += `
-                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
-                                <td style="padding: 12px; font-weight: 600; color: #f8fafc;">${mName}</td>
-                                <td style="padding: 12px; color: var(--tg-text-muted);">${mPhone}</td>
-                                <td style="padding: 12px; text-align: center;">
-                                    <button onclick="sendReminder('${mName}', '${mPhone}')" style="background: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
-                                        <i class="fa-solid fa-paper-plane"></i> তাগাদা
-                                    </button>
-                                </td>
-                            </tr>
-                        `;
-                    });
-                }
-
             } catch (err) {
-                console.error('Error fetching task status:', err);
-                submittedTableBody.innerHTML = `<tr><td colspan="3" style="padding: 15px; text-align: center; color: #ef4444;">তথ্য লোড করতে সমস্যা হয়েছে।</td></tr>`;
+                console.error('Error fetching emergency requests:', err);
+                tableBody.innerHTML = `<tr><td colspan="5" style="padding: 20px; text-align: center; color: #ef4444;">ডাটা লোড করতে সমস্যা হয়েছে।</td></tr>`;
             }
         }
 
-        function sendReminder(name, phone) {
-            const message = `আসসালামু আলাইকুম ${name}, ইউনিটি বন্ধু গ্রুপের আজকের কাজটি এখনো আপনি জমা দেননি। দয়া করে দ্রুত কাজটি সম্পন্ন করুন।`;
-            if (phone && phone.length >= 11) {
-                let formattedPhone = phone.startsWith('88') ? phone : '88' + phone;
-                window.open(`https://wa.me/${formattedPhone}?text=${encodeURIComponent(message)}`, '_blank');
+        function callMember(phone) {
+            if (phone && phone !== 'নম্বর নেই') {
+                window.location.href = `tel:${phone}`;
             } else {
-                alert(`${name}-কে তাগাদা বার্তা: ${message}`);
+                alert('সঠিক মোবাইল নম্বর পাওয়া যায়নি!');
             }
         }
 
-        function sendBulkNotice() {
-            if (pendingMembersList.length === 0) return;
-
-            let noticeText = "📢 ইউনিটি বন্ধু গ্রুপ নোটিশ:\nযাঁরা আজকের কাজটি এখনো জমা দেননি, তাঁরা দ্রুত কাজ সম্পন্ন করে গ্রুপে লিংক জমা দিন।\n\nবাকি থাকা মেম্বারদের তালিকা:\n";
-            
-            pendingMembersList.forEach((m, index) => {
-                const name = m.full_name || m.name || 'মেম্বার';
-                const phone = m.mobile || 'নম্বর নেই';
-                noticeText += `${index + 1}. ${name} (${phone})\n`;
-            });
-
-            navigator.clipboard.writeText(noticeText).then(() => {
-                alert('সফলভাবে সব বাকি মেম্বারদের তালিকা ও নোটিশ কপি হয়েছে!\nএখন আপনি এটি গ্রুপে পেস্ট (Paste) করে সবাইকে একসাথে তাগাদা দিতে পারবেন।');
-            }).catch(err => {
-                console.error('Copy failed', err);
-                alert('কপি করতে সমস্যা হয়েছে।');
-            });
+        async function deleteRequest(id) {
+            if (confirm('আপনি কি এই রিকোয়েস্টটি ডিলিট করতে চান?')) {
+                const { error } = await _supabase.from('emergency_requests').delete().eq('id', id);
+                if (error) {
+                    alert('ডিলিট করতে সমস্যা হয়েছে: ' + error.message);
+                } else {
+                    alert('রিকোয়েস্ট সফলভাবে ডিলিট করা হয়েছে!');
+                    loadEmergencyRequests();
+                }
+            }
         }
 
-        loadTaskStatus();
+        loadEmergencyRequests();
     </script>
 </body>
 </html>
