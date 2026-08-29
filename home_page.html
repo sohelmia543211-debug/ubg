@@ -10,6 +10,34 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <!-- CSS ফাইল -->
     <link rel="stylesheet" href="home.css">
+    <style>
+        /* এডিট বাটনের জন্য ছোট স্টাইল */
+        .tg-header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .tg-edit-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: #34d399;
+            border: 1px solid rgba(52, 211, 153, 0.3);
+            padding: 8px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        .tg-edit-btn:hover {
+            background: rgba(52, 211, 153, 0.2);
+            border-color: #34d399;
+            color: #fff;
+        }
+    </style>
 </head>
 <body>
 
@@ -27,7 +55,12 @@
                     <p id="displayUserPhone">موبাইল নম্বর</p>
                 </div>
             </div>
-            <button class="tg-logout-btn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> লগআউট</button>
+            
+            <!-- হেডার অ্যাকশন বাটনসমূহ (সঠিক এডিট পেজ লিংক সহ) -->
+            <div class="tg-header-actions">
+                <a href="editfile.html" class="tg-edit-btn"><i class="fa-solid fa-user-pen"></i> এডিট প্রোফাইল</a>
+                <button class="tg-logout-btn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> লগআউট</button>
+            </div>
         </header>
 
         <!-- জরুরি সাহায্য বা বিপদে পড়ার হেল্পলাইন সেকশন -->

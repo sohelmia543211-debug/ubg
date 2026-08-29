@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>প্রোফাইল এডিট - ইউনিটি বন্ধু গ্রুপ</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+        :root {
+            --primary: #10b981;
+            --primary-dark: #059669;
+            --bg-gradient: linear-gradient(135deg, #090d16 0%, #171c3d 100%);
+            --card-bg: rgba(255, 255, 255, 0.04);
+            --card-border: rgba(16, 185, 129, 0.25);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px;
+        }
+
+        .form-container {
+            width: 100%;
+            max-width: 550px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 40px 30px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .form-header h1 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            background: linear-gradient(to right, #34d399, #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .input-group {
+            margin-bottom: 16px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-field {
+            position: relative;
+        }
+
+        .input-field > i:first-child {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .input-field input, 
+        .input-field select {
+            width: 100%;
+            padding: 12px 15px 12px 45px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field input.password-input {
+            padding-right: 45px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .toggle-password:hover {
+            color: var(--primary);
+        }
+
+        .input-field select option {
+            background: #171c3d;
+            color: white;
+        }
+
+        .input-field input[type="file"] {
+            padding: 10px 15px 10px 45px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .input-field input:focus,
+        .input-field select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.05rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.5);
+        }
+
+        .back-dashboard {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #34d399;
+            font-size: 0.9rem;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .back-dashboard:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="form-container">
+        <div class="form-header">
+            <h1>প্রোফাইল এডিট করুন</h1>
+            <p>আপনার প্রয়োজনীয় তথ্য পরিবর্তন করে আপডেট করুন</p>
+        </div>
+
+        <form id="editForm">
+            <div class="input-group">
+                <label>আপনার সম্পূর্ণ নাম</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="fullName" placeholder="আপনার নাম লিখুন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>মোবাইল নম্বর (পরিবর্তন করা যাবে না)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="phoneNumber" readonly style="opacity: 0.7; cursor: not-allowed;" placeholder="মোবাইল নম্বর">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>জেলা</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-map-location-dot"></i>
+                    <input type="text" id="district" placeholder="জেলার নাম" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>থানা / উপজেলা</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-map-pin"></i>
+                    <input type="text" id="upazila" placeholder="থানার নাম" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ইউনিয়ন / ওয়ার্ড / গ্রাম</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-location-dot"></i>
+                    <input type="text" id="addressDetails" placeholder="গ্রাম/ইউনিয়ন" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>নতুন সেলফি বা প্রোফাইল ছবি (ঐচ্ছিক)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-camera"></i>
+                    <input type="file" id="selfieImage" accept="image/*">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>ফেসবুক আইডি বা পেজের লিংক</label>
+                <div class="input-field">
+                    <i class="fa-brands fa-facebook"></i>
+                    <input type="url" id="facebookLink" placeholder="ফেসবুক লিংক" required>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>নতুন পাসওয়ার্ড (পরিবর্তন করতে চাইলে)</label>
+                <div class="input-field">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="passwordField" class="password-input" placeholder="নতুন পাসওয়ার্ড দিন">
+                    <i class="fa-solid fa-eye toggle-password" id="togglePassword"></i>
+                </div>
+            </div>
+
+            <button type="submit" id="updateBtn" class="btn-submit">
+                <i class="fa-solid fa-floppy-disk"></i> পরিবর্তন সংরক্ষণ করুন
+            </button>
+        </form>
+
+        <a href="home_page.html" class="back-dashboard"><i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ডে ফিরে যান</a>
+    </div>
+
+    <script>
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // পাসওয়ার্ড শো/হাইড টগল
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordField = document.querySelector('#passwordField');
+        togglePassword.addEventListener('click', function () {
+            const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordField.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        // লোকালস্টোরেজ থেকে লগইন করা মেম্বারের মোবাইল নম্বর নেওয়া
+        const loggedInPhone = localStorage.getItem('userPhone');
+        if (!loggedInPhone) {
+            alert('দয়া করে প্রথমে লগইন করুন!');
+            window.location.href = 'login.html';
+        }
+
+        // পেজ লোড হওয়ার সাথে সাথে মেম্বারের বর্তমান ডেটা ফর্ম ইনপুটে বসানো
+        async function loadMemberData() {
+            try {
+                const { data, error } = await _supabase
+                    .from('members')
+                    .select('*')
+                    .eq('mobile', loggedInPhone)
+                    .single();
+
+                if (error) throw error;
+
+                if (data) {
+                    document.getElementById('fullName').value = data.full_name || '';
+                    document.getElementById('phoneNumber').value = data.mobile || '';
+                    document.getElementById('district').value = data.district || '';
+                    document.getElementById('upazila').value = data.thana || '';
+                    document.getElementById('addressDetails').value = data.union_ward || '';
+                    document.getElementById('facebookLink').value = data.facebook_link || '';
+                    document.getElementById('passwordField').value = data.password || '';
+                }
+            } catch (err) {
+                console.error('Error loading data:', err);
+                alert('মেম্বার তথ্য লোড করতে সমস্যা হয়েছে।');
+            }
+        }
+
+        loadMemberData();
+
+        // ফর্ম সাবমিট ও আপডেট হ্যান্ডলার
+        document.getElementById('editForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const updateBtn = document.getElementById('updateBtn');
+            updateBtn.innerText = 'আপডেট হচ্ছে, অপেক্ষা করুন...';
+            updateBtn.disabled = true;
+
+            try {
+                const fullName = document.getElementById('fullName').value.trim();
+                const district = document.getElementById('district').value.trim();
+                const upazila = document.getElementById('upazila').value.trim();
+                const addressDetails = document.getElementById('addressDetails').value.trim();
+                const facebookLink = document.getElementById('facebookLink').value.trim();
+                const password = passwordField.value.trim();
+
+                const selfieFile = document.getElementById('selfieImage').files[0];
+                let selfieImageUrl = null;
+
+                // যদি নতুন ছবি সিলেক্ট করা হয় তবে স্টোরেজে আপলোড হবে
+                if (selfieFile) {
+                    const fileExt = selfieFile.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `selfies/${fileName}`;
+
+                    const { error: uploadError } = await _supabase.storage
+                        .from('member-images')
+                        .upload(filePath, selfieFile);
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: { publicUrl } } = _supabase.storage
+                        .from('member-images')
+                        .getPublicUrl(filePath);
+
+                    selfieImageUrl = publicUrl;
+                }
+
+                // আপডেট অবজেক্ট তৈরি
+                const updateData = {
+                    full_name: fullName,
+                    district: district,
+                    thana: upazila,
+                    union_ward: addressDetails,
+                    facebook_link: facebookLink,
+                    password: password
+                };
+
+                // ছবি আপলোড হয়ে থাকলে অবজেক্টে যুক্ত হবে
+                if (selfieImageUrl) {
+                    updateData.selfie_image = selfieImageUrl;
+                }
+
+                // Supabase টেবিলে আপডেট করা
+                const { error: updateError } = await _supabase
+                    .from('members')
+                    .update(updateData)
+                    .eq('mobile', loggedInPhone);
+
+                if (updateError) throw updateError;
+
+                alert('সফলভাবে আপনার প্রোফাইল আপডেট করা হয়েছে!');
+                window.location.href = 'home_page.html';
+
+            } catch (err) {
+                console.error('Update Error:', err);
+                alert('প্রোফাইল আপডেট করতে সমস্যা হয়েছে: ' + (err.message || err));
+                updateBtn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> পরিবর্তন সংরক্ষণ করুন';
+                updateBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

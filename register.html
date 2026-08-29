@@ -260,19 +260,20 @@
                 </div>
             </div>
 
+            <!-- গ্যালারি বা ক্যামেরা উভয় মাধ্যম থেকে ফাইল নেওয়ার সুবিধা সম্বলিত ইনপুট -->
             <div class="input-group">
-                <label>আইডি কার্ডের সরাসরি ছবি তুলুন (ক্যামেরা)</label>
+                <label>আইডি কার্ডের ছবি আপলোড করুন (গ্যালারি বা ক্যামেরা)</label>
                 <div class="input-field">
-                    <i class="fa-solid fa-camera"></i>
-                    <input type="file" id="idCardImage" accept="image/*" capture="environment" required>
+                    <i class="fa-solid fa-image"></i>
+                    <input type="file" id="idCardImage" accept="image/*" required>
                 </div>
             </div>
 
             <div class="input-group">
-                <label>আপনার নিজের সরাসরি ছবি তুলুন (সেলফি/ক্যামেরা)</label>
+                <label>আপনার নিজের ছবি আপলোড করুন (গ্যালারি বা ক্যামেরা)</label>
                 <div class="input-field">
-                    <i class="fa-solid fa-user-camera"></i>
-                    <input type="file" id="selfieImage" accept="image/*" capture="user" required>
+                    <i class="fa-solid fa-user-gear"></i>
+                    <input type="file" id="selfieImage" accept="image/*" required>
                 </div>
             </div>
 
@@ -325,7 +326,6 @@
 
         // ফর্ম সাবমিট হ্যান্ডলার
         document.getElementById('registerForm').addEventListener('submit', async function(e) {
-            // ব্রাউজারের ডিফল্ট পেজ রিলোড বা সাবমিট সম্পূর্ণরূপে বন্ধ করা হলো
             e.preventDefault();
             
             const submitBtn = document.getElementById('submitBtn');
@@ -334,7 +334,6 @@
             submitBtn.disabled = true;
 
             try {
-                // ১. ইনপুট ফিল্ডের ডাটাগুলো সংগ্রহ করা
                 const fullName = document.getElementById('fullName').value.trim();
                 const phoneNumber = document.getElementById('phoneNumber').value.trim();
                 const district = document.getElementById('district').value.trim();
@@ -348,7 +347,6 @@
                 const idCardFile = document.getElementById('idCardImage').files[0];
                 const selfieFile = document.getElementById('selfieImage').files[0];
 
-                // ২. ছবিগুলো Supabase Storage-এ আপলোড করার ফাংশন
                 async function uploadImage(file, folderName) {
                     const fileExt = file.name.split('.').pop();
                     const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
@@ -360,7 +358,6 @@
 
                     if (error) throw error;
 
-                    // পাবলিক URL বের করা
                     const { data: { publicUrl } } = _supabase.storage
                         .from('member-images')
                         .getPublicUrl(filePath);
@@ -368,7 +365,6 @@
                     return publicUrl;
                 }
 
-                // ছবি দুটি আপলোড করা
                 let idCardImageUrl = '';
                 let selfieImageUrl = '';
 
@@ -379,7 +375,6 @@
                     selfieImageUrl = await uploadImage(selfieFile, 'selfies');
                 }
 
-                // ৩. members টেবিলে ডাটা ইনসার্ট করা
                 const { error: dbError } = await _supabase
                     .from('members')
                     .insert([
@@ -401,12 +396,12 @@
                 if (dbError) throw dbError;
 
                 alert('অভিনন্দন! আপনার রেজিস্ট্রেশন সফলভাবে সম্পন্ন হয়েছে।');
-                document.getElementById('registerForm').reset(); // ফর্মের সব ইনপুট ক্লিয়ার করে দেওয়া
+                document.getElementById('registerForm').reset();
                 window.location.href = 'login.html';
 
             } catch (error) {
                 console.error('Registration Error:', error);
-                alert('রেজিস্ট্রেশন করতে সমস্যা হয়েছে: সচিব বা ডাটাবেজ চেক করুন। বিস্তারিত: ' + (error.message || error));
+                alert('রেজিস্ট্রেশন করতে সমস্যা হয়েছে: ' + (error.message || error));
                 submitBtn.innerHTML = originalBtnText;
                 submitBtn.disabled = false;
             }

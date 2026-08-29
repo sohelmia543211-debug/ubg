@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>মেম্বারদের সমস্যা ও রিকোয়েস্ট - অ্যাডমিন প্যানেল</title>
+    <!-- FontAwesome আইকন -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+    <div class="tg-app-container" style="max-width: 900px;">
+        
+        <!-- হেডার সেকশন -->
+        <header class="tg-header">
+            <div class="user-profile-box">
+                <div class="avatar-wrapper" style="background: #f59e0b; display: flex; align-items: center; justify-content: center; border-radius: 50%; width: 50px; height: 50px;">
+                    <i class="fa-solid fa-triangle-exclamation" style="font-size: 24px; color: white;"></i>
+                </div>
+                <div class="user-info">
+                    <h3>মেম্বারদের সমস্যা ও আবেদন</h3>
+                    <p style="color: #fcd34d; font-size: 0.85rem;"><i class="fa-solid fa-list-check"></i> জরুরি রিকোয়েস্ট ম্যানেজমেন্ট</p>
+                </div>
+            </div>
+            <!-- ড্যাশবোর্ডে ফিরে যাওয়ার বাটন -->
+            <a href="admin.html" class="tg-logout-btn" style="text-decoration:none; background: #334155; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-arrow-left"></i> ড্যাশবোর্ড
+            </a>
+        </header>
+
+        <!-- মূল কন্টেন্ট ও ফিল্টার সেকশন -->
+        <section class="tg-submit-section" style="margin-top: 20px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+                <div class="feed-title" style="color: #f59e0b; margin: 0;">
+                    <i class="fa-solid fa-hands-holding-child"></i> সকল সহায়তার আবেদনসমূহ
+                </div>
+                <button onclick="loadAllProblems()" style="background: #0284c7; color: white; border: none; padding: 8px 14px; border-radius: 6px; cursor: pointer; font-size: 0.85rem;">
+                    <i class="fa-solid fa-rotate"></i> রিফ্রেশ করুন
+                </button>
+            </div>
+            
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left; color: white; font-size: 0.9rem;">
+                    <thead>
+                        <tr style="background: rgba(245, 158, 11, 0.2); border-bottom: 2px solid #f59e0b;">
+                            <th style="padding: 12px;">মেম্বারের নাম ও মোবাইল</th>
+                            <th style="padding: 12px;">সমস্যার বিস্তারিত বিবরণ</th>
+                            <th style="padding: 12px; text-align: center;">স্ট্যাটাস</th>
+                            <th style="padding: 12px; text-align: center;">অ্যাকশন / যোগাযোগ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="allProblemsBody">
+                        <tr>
+                            <td colspan="4" style="padding: 20px; text-align: center; color: var(--tg-text-muted);">তথ্য লোড হচ্ছে...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- SUPABASE CONFIGURATION ---
+        const SUPABASE_URL = 'https://qneicfttboxzorcvhzmk.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFuZWljZnR0Ym94em9yY3Zoem1rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAxODk1OTcsImV4cCI6MjA4NTc2NTU5N30.fhiCdQQ65GXjyIG_HrmQyUmxzpuaROlT-AAr_lf4nnE';
+        
+        const _supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        // পেজ লোড হওয়ার সাথে সাথে সমস্ত সমস্যা লোড করা
+        async function loadAllProblems() {
+            const tableBody = document.getElementById('allProblemsBody');
+            tableBody.innerHTML = `<tr><td colspan="4" style="padding: 20px; text-align: center; color: var(--tg-text-muted);">লোড হচ্ছে...</td></tr>`;
+
+            try {
+                const { data: requests, error } = await _supabase
+                    .from('emergency_requests')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+
+                if (error) throw error;
+
+                if (!requests || requests.length === 0) {
+                    tableBody.innerHTML = `<tr><td colspan="4" style="padding: 20px; text-align: center; color: var(--tg-text-muted);">কোনো মেম্বার এখনো কোনো সমস্যা বা আবেদন পাঠাননি।</td></tr>`;
+                    return;
+                }
+
+                tableBody.innerHTML = '';
+                requests.forEach(req => {
+                    const formattedDate = new Date(req.created_at).toLocaleString('bn-BD', {
+                        dateStyle: 'short',
+                        timeStyle: 'short'
+                    });
+
+                    const isResolved = req.status === 'Resolved';
+                    const statusBadge = isResolved 
+                        ? `<span style="background: rgba(16, 185, 129, 0.2); color: #34d399; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">সমাধান হয়েছে</span>`
+                        : `<span style="background: rgba(239, 68, 68, 0.2); color: #f87171; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">পেন্ডিং</span>`;
+
+                    tableBody.innerHTML += `
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.1);">
+                            <td style="padding: 12px;">
+                                <strong style="color: #ffb020; font-size: 0.95rem;">${req.user_name}</strong><br>
+                                <span style="color: var(--tg-text-muted); font-size: 0.85rem;"><i class="fa-solid fa-phone"></i> ${req.mobile}</span>
+                            </td>
+                            <td style="padding: 12px; color: #f8fafc; font-size: 0.9rem;">
+                                ${req.details}
+                                <div style="font-size: 0.75rem; color: var(--tg-text-muted); margin-top: 4px;">আবেদনের সময়: ${formattedDate}</div>
+                            </td>
+                            <td style="padding: 12px; text-align: center;">
+                                ${statusBadge}
+                            </td>
+                            <td style="padding: 12px; text-align: center;">
+                                <div style="display: flex; gap: 6px; justify-content: center; align-items: center; flex-wrap: wrap;">
+                                    <a href="tel:${req.mobile}" style="background: #10b981; color: white; padding: 6px 10px; border-radius: 6px; text-decoration: none; font-size: 0.8rem; display: inline-block;">
+                                        <i class="fa-solid fa-phone"></i> কল
+                                    </a>
+                                    ${!isResolved ? `
+                                        <button onclick="markAsResolved(${req.id})" style="background: #3b82f6; color: white; border: none; padding: 6px 10px; border-radius: 6px; cursor: pointer; font-size: 0.8rem;">
+                                            <i class="fa-solid fa-check"></i> সমাধান
+                                        </button>
+                                    ` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+
+            } catch (err) {
+                console.error('Error fetching problems:', err);
+                tableBody.innerHTML = `<tr><td colspan="4" style="padding: 20px; text-align: center; color: #ef4444;">তথ্য লোড করতে সমস্যা হয়েছে।</td></tr>`;
+            }
+        }
+
+        // সমস্যা সমাধান হিসেবে আপডেট করার ফাংশন
+        async function markAsResolved(id) {
+            if (!confirm('আপনি কি নিশ্চিত যে এই সমস্যার সমাধান হয়েছে?')) return;
+
+            try {
+                const { error } = await _supabase
+                    .from('emergency_requests')
+                    .update({ status: 'Resolved' })
+                    .eq('id', id);
+
+                if (error) throw error;
+
+                alert('সফলভাবে স্ট্যাটাস আপডেট করা হয়েছে!');
+                loadAllProblems(); // তালিকা রিফ্রেশ করুন
+            } catch (err) {
+                console.error('Error updating status:', err);
+                alert('স্ট্যাটাস আপডেট করতে সমস্যা হয়েছে।');
+            }
+        }
+
+        // পেজ লোড হওয়ার সাথে ডাটা ফেচ হবে
+        loadAllProblems();
+    </script>
+</body>
+</html>
