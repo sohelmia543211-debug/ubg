@@ -11,30 +11,40 @@
     <!-- CSS ফাইল -->
     <link rel="stylesheet" href="home.css">
     <style>
-        /* এডিট বাটনের জন্য ছোট স্টাইল */
+        /* বাটন দুটি ছোট ও আকর্ষণীয় করার জন্য কাস্টম স্টাইল */
         .tg-header-actions {
             display: flex;
-            gap: 10px;
+            gap: 6px;
             align-items: center;
         }
-        .tg-edit-btn {
-            background: rgba(255, 255, 255, 0.1);
+        .tg-edit-btn, .tg-logout-btn {
+            background: rgba(255, 255, 255, 0.08);
             color: #34d399;
-            border: 1px solid rgba(52, 211, 153, 0.3);
-            padding: 8px 14px;
-            border-radius: 8px;
+            border: 1px solid rgba(52, 211, 153, 0.25);
+            padding: 5px 10px;
+            border-radius: 6px;
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
             font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             text-decoration: none;
             transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        .tg-logout-btn {
+            color: #f87171;
+            border-color: rgba(248, 113, 113, 0.25);
         }
         .tg-edit-btn:hover {
             background: rgba(52, 211, 153, 0.2);
             border-color: #34d399;
+            color: #fff;
+        }
+        .tg-logout-btn:hover {
+            background: rgba(248, 113, 113, 0.2);
+            border-color: #f87171;
             color: #fff;
         }
     </style>
@@ -56,9 +66,9 @@
                 </div>
             </div>
             
-            <!-- হেডার অ্যাকশন বাটনসমূহ (সঠিক এডিট পেজ লিংক সহ) -->
+            <!-- ছোট করা হেডার অ্যাকশন বাটনসমূহ -->
             <div class="tg-header-actions">
-                <a href="editfile.html" class="tg-edit-btn"><i class="fa-solid fa-user-pen"></i> এডিট প্রোফাইল</a>
+                <a href="editfile.html" class="tg-edit-btn"><i class="fa-solid fa-user-pen"></i> এডিট</a>
                 <button class="tg-logout-btn" onclick="logout()"><i class="fa-solid fa-arrow-right-from-bracket"></i> লগআউট</button>
             </div>
         </header>
